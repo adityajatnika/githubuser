@@ -1,55 +1,60 @@
-package com.example.githubuserapp.model
+package com.example.githubuserapp.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.githubuserapp.model.User
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.AsyncHttpResponseHandler
 import cz.msebera.android.httpclient.Header
-import org.json.JSONArray
 import org.json.JSONObject
 
-class MainViewModel : ViewModel(){
-    val users = MutableLiveData<List<User>>()
+class ProfileViewModel : ViewModel(){
+    val userData = MutableLiveData<User>()
     val isLoading = MutableLiveData(true)
     val stringError = MutableLiveData<String>()
-    private val baseUrl = "https://api.github.com/"
 
-    fun getListUser(nextUrl : String) {
+    fun getDetailUser(user: User) {
         isLoading.postValue(true)
         val client = AsyncHttpClient()
         client.addHeader("Authorization", "token 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")
         client.addHeader("User-Agent", "request")
-        val url = StringBuilder(baseUrl).append(nextUrl).toString()
+        val url = "https://api.github.com/users/${user.username}"
         client.get(url, object : AsyncHttpResponseHandler() {
-            override fun onSuccess(statusCode: Int, headers: Array<Header>, responseBody: ByteArray) {
+            override fun onSuccess(
+                statusCode: Int,
+                headers: Array<Header>,
+                responseBody: ByteArray
+            ) {
                 // Jika koneksi berhasil
                 isLoading.postValue(false)
-                val listUser = ArrayList<User>()
                 val result = String(responseBody)
                 Log.d(TAG, result)
                 try {
-                    val jsonArray = if (nextUrl == "users"){
-                        JSONArray(result)
-                    } else {
-                        val jsonObject = JSONObject(result)
-                        jsonObject.getJSONArray("items")
-                    }
-                    for (i in 0 until jsonArray.length()) {
-                        val jsonObject = jsonArray.getJSONObject(i)
-                        val login = jsonObject.getString("login")
-                        val avatar = jsonObject.getString("avatar_url")
-                        val id = jsonObject.getString("id")
-                        val user = User(id, login, avatar)
-                        listUser.add(user)
-                    }
-                    users.postValue(listUser)
+                    val responseObject = JSONObject(result)
+                    val id = responseObject.getString("id")
+                    val name = responseObject.getString("name")
+                    val login = responseObject.getString("login")
+                    val company = responseObject.getString("company")
+                    val location = responseObject.getString("location")
+                    val avatar = responseObject.getString("avatar_url")
+                    val followers = responseObject.getInt("followers")
+                    val repos = responseObject.getInt("public_repos")
+                    val following = responseObject.getInt("following")
+                    val userModel = User(id, login, avatar, company, location, followers, following, repos, name)
+                    userData.postValue(userModel)
                 } catch (e: Exception) {
                     stringError.postValue(e.message)
                     e.printStackTrace()
                 }
             }
-            override fun onFailure(statusCode: Int, headers: Array<Header>, responseBody: ByteArray, error: Throwable) {
+
+            override fun onFailure(
+                statusCode: Int,
+                headers: Array<Header>,
+                responseBody: ByteArray,
+                error: Throwable
+            ) {
                 // Jika koneksi gagal
                 isLoading.postValue(false)
                 val errorMessage = when (statusCode) {

@@ -10,7 +10,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.githubuserapp.adapter.SectionPagerAdapter
 import com.example.githubuserapp.databinding.ActivityProfileBinding
-import com.example.githubuserapp.model.ProfileViewModel
+import com.example.githubuserapp.viewmodel.ProfileViewModel
 import com.example.githubuserapp.model.User
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
