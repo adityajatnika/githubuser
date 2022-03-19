@@ -18,7 +18,7 @@
                 <ImageView
                     android:id="@+id/img_user"
                     style="@style/imageProfil"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="20dp"
                     android:contentDescription="@string/avatar"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.498"
@@ -108,11 +108,9 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout_top"
-            app:tabTextColor="@android:color/white" />
+            app:layout_constraintTop_toBottomOf="@+id/layout_top" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_pager"

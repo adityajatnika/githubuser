@@ -3,27 +3,24 @@ package com.example.githubuserapp
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubuserapp.adapter.ListUserAdapter
 import com.example.githubuserapp.databinding.FragmentFollowersBinding
 import com.example.githubuserapp.model.User
-import com.loopj.android.http.AsyncHttpClient
-import com.loopj.android.http.AsyncHttpResponseHandler
-import cz.msebera.android.httpclient.Header
-import org.json.JSONArray
+import com.example.githubuserapp.viewmodel.FollowersViewModel
 
 class FollowersFragment(private val user: User) : Fragment() {
 
 
     private lateinit var binding: FragmentFollowersBinding
-    private val baseUrl = "https://api.github.com/"
+    private val viewModel: FollowersViewModel by viewModels()
     private val listUser = ArrayList<User>()
     private val adapter = ListUserAdapter(listUser)
 
@@ -34,55 +31,86 @@ class FollowersFragment(private val user: User) : Fragment() {
 
     }
 
-    private fun getListUser() {
-        binding.progressBar.visibility = View.VISIBLE
-        val client = AsyncHttpClient()
-        client.addHeader("Authorization", "token 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")
-        client.addHeader("User-Agent", "request")
-        val url = StringBuilder(baseUrl).append("users/${user.username}/followers").toString()
-        client.get(url, object : AsyncHttpResponseHandler() {
-            override fun onSuccess(statusCode: Int, headers: Array<Header>, responseBody: ByteArray) {
-                // Jika koneksi berhasil
-                binding.progressBar.visibility = View.INVISIBLE
-                showRecyclerList()
-                val result = String(responseBody)
-                Log.d(TAG, result)
-                try {
-                    val jsonArray = JSONArray(result)
-                    for (i in 0 until jsonArray.length()) {
-                        val jsonObject = jsonArray.getJSONObject(i)
-                        val login = jsonObject.getString("login")
-                        val avatar = jsonObject.getString("avatar_url")
-                        val id = jsonObject.getString("id")
-                        val user = User(id, login, avatar)
-                        listUser.add(user)
-                        Log.d(TAG, user.toString())
-                    }
-                    binding.rvUser.adapter = adapter
+    private fun setUpView(){
+        showRecyclerList()
 
-                    adapter.setOnItemClickCallback(object : ListUserAdapter.OnItemClickCallback {
-                        override fun onItemClicked(data: User) {
-                            showSelectedUser(data)
-                        }
-                    })
-                } catch (e: Exception) {
-                    Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
-                    e.printStackTrace()
-                }
+        viewModel.isLoading.observe(viewLifecycleOwner) {
+            binding.progressBar.visibility = if (it) {
+                View.VISIBLE
+            } else {
+                View.INVISIBLE
             }
-            override fun onFailure(statusCode: Int, headers: Array<Header>, responseBody: ByteArray, error: Throwable) {
-                // Jika koneksi gagal
-                binding.progressBar.visibility = View.INVISIBLE
-                val errorMessage = when (statusCode) {
-                    401 -> "$statusCode : Bad Request"
-                    403 -> "$statusCode : Forbidden"
-                    404 -> "$statusCode : Not Found"
-                    else -> "$statusCode : ${error.message}"
-                }
-                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+        }
+
+        viewModel.users.observe(viewLifecycleOwner) {
+            if(it != null){
+                val adapter = ListUserAdapter(it)
+                binding.rvUser.adapter = adapter
+
+                adapter.setOnItemClickCallback(object : ListUserAdapter.OnItemClickCallback {
+                    override fun onItemClicked(data: User) {
+                        showSelectedUser(data)
+                    }
+                })
             }
-        })
+        }
+
+        viewModel.stringError.observe(viewLifecycleOwner){
+            if(it != null){
+                Toast.makeText(requireContext(), it.toString(), Toast.LENGTH_LONG).show()
+            }
+        }
     }
+
+//    private fun getListUser() {
+//        binding.progressBar.visibility = View.VISIBLE
+//        val client = AsyncHttpClient()
+//        client.addHeader("Authorization", "token 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")
+//        client.addHeader("User-Agent", "request")
+//        val url = StringBuilder(baseUrl).append("users/${user.username}/followers").toString()
+//        client.get(url, object : AsyncHttpResponseHandler() {
+//            override fun onSuccess(statusCode: Int, headers: Array<Header>, responseBody: ByteArray) {
+//                // Jika koneksi berhasil
+//                binding.progressBar.visibility = View.INVISIBLE
+//                showRecyclerList()
+//                val result = String(responseBody)
+//                Log.d(TAG, result)
+//                try {
+//                    val jsonArray = JSONArray(result)
+//                    for (i in 0 until jsonArray.length()) {
+//                        val jsonObject = jsonArray.getJSONObject(i)
+//                        val login = jsonObject.getString("login")
+//                        val avatar = jsonObject.getString("avatar_url")
+//                        val id = jsonObject.getString("id")
+//                        val user = User(id, login, avatar)
+//                        listUser.add(user)
+//                        Log.d(TAG, user.toString())
+//                    }
+//                    binding.rvUser.adapter = adapter
+//
+//                    adapter.setOnItemClickCallback(object : ListUserAdapter.OnItemClickCallback {
+//                        override fun onItemClicked(data: User) {
+//                            showSelectedUser(data)
+//                        }
+//                    })
+//                } catch (e: Exception) {
+//                    Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+//                    e.printStackTrace()
+//                }
+//            }
+//            override fun onFailure(statusCode: Int, headers: Array<Header>, responseBody: ByteArray, error: Throwable) {
+//                // Jika koneksi gagal
+//                binding.progressBar.visibility = View.INVISIBLE
+//                val errorMessage = when (statusCode) {
+//                    401 -> "$statusCode : Bad Request"
+//                    403 -> "$statusCode : Forbidden"
+//                    404 -> "$statusCode : Not Found"
+//                    else -> "$statusCode : ${error.message}"
+//                }
+//                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+//            }
+//        })
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -91,6 +119,7 @@ class FollowersFragment(private val user: User) : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentFollowersBinding.inflate(layoutInflater, container, false)
         return binding.root
+//        viewModel = ViewModelProvider(this)[FollowersViewModel::class.java]
     }
 
     private fun showSelectedUser(user: User) {
@@ -105,7 +134,8 @@ class FollowersFragment(private val user: User) : Fragment() {
         binding.rvUser.setHasFixedSize(true)
         binding.rvUser.adapter = this@FollowersFragment.adapter
         binding.rvUser.layoutManager = LinearLayoutManager(requireContext())
-        getListUser()
+        setUpView()
+        viewModel.getListUser(user.username)
     }
 
     private fun showRecyclerList() {

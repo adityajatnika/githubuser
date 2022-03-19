@@ -21,8 +21,8 @@
     </style>
 
     <style name="imageProfil">
-        <item name="android:layout_width">150dp</item>
-        <item name="android:layout_height">150dp</item>
+        <item name="android:layout_width">130dp</item>
+        <item name="android:layout_height">130dp</item>
         <item name="android:layout_marginTop">60dp</item>
     </style>
 
@@ -34,7 +34,7 @@
 
     <style name="textContent.profileName">
         <item name="android:layout_marginTop">40dp</item>
-        <item name="android:textSize">34sp</item>
+        <item name="android:textSize">30sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
