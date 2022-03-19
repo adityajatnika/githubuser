@@ -20,7 +20,6 @@ import com.example.githubuserapp.model.User
 import com.example.githubuserapp.viewmodel.MainViewModel
 
 class MainActivity : AppCompatActivity() {
-//    private val list = ArrayList<User>()
 
     private val viewModel: MainViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding

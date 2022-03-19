@@ -1,5 +1,6 @@
 package com.example.githubuserapp
 
+import com.example.githubuserapp.responses.DetailUserResponse
 import com.example.githubuserapp.responses.FindUserResponse
 import com.example.githubuserapp.responses.UserResponse
 import retrofit2.Call
@@ -24,4 +25,8 @@ interface ApiServices {
     @GET("users/{login}/following")
     @Headers("Authorization: token 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")
     fun getFollowing(@Path("login") login : String): Call<List<UserResponse>>
+
+    @GET("users/{login}")
+    @Headers("Authorization: token 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")
+    fun getDetailUser(@Path("login") login : String): Call<DetailUserResponse>
 }

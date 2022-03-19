@@ -121,6 +121,7 @@
     <string name="menu_2">Opsi 1</string>
     <string name="search">Cari</string>
     <string name="search_hint">Cari Username</string>
+    <string name="logo_developer">Logo Developer</string>
 
 
 </resources>

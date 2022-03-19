@@ -10,8 +10,8 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.githubuserapp.adapter.SectionPagerAdapter
 import com.example.githubuserapp.databinding.ActivityProfileBinding
-import com.example.githubuserapp.viewmodel.ProfileViewModel
 import com.example.githubuserapp.model.User
+import com.example.githubuserapp.viewmodel.ProfileViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import java.util.*
@@ -32,7 +32,7 @@ class ProfileActivity : AppCompatActivity() {
 
         setUpView()
         val user = intent.getParcelableExtra<User>(EXTRA_USER) as User
-        viewModel.getDetailUser(user)
+        viewModel.getDetail(user.username)
 
         val sectionsPagerAdapter = SectionPagerAdapter(this, user)
         val viewPager: ViewPager2 = findViewById(R.id.view_pager)
@@ -57,11 +57,11 @@ class ProfileActivity : AppCompatActivity() {
             if(user != null){
                 binding.apply {
                     tvNama.text = user.name
-                    tvUsername.text = java.lang.StringBuilder("@").append(user.username)
+                    tvUsername.text = java.lang.StringBuilder("@").append(user.login)
                     tvCompany.text = StringBuilder(getString(R.string.company)).append(": ").append(user.company)
                     tvLocation.text = StringBuilder(getString(R.string.location)).append(": ").append(user.location)
                     Glide.with(baseContext)
-                        .load(user.avatar)
+                        .load(user.avatarUrl)
                         .circleCrop()
                         .into(imgUser)
                     tvFollowers.text = java.lang.StringBuilder(user.followers.toString()).append(" ").append(getString(
@@ -69,7 +69,7 @@ class ProfileActivity : AppCompatActivity() {
                         Locale.getDefault()
                     ))
                     tvFollowing.text = java.lang.StringBuilder(user.following.toString()).append(" diikuti")
-                    tvRepository.text = java.lang.StringBuilder(user.repository.toString()).append(" repositori")
+                    tvRepository.text = java.lang.StringBuilder(user.publicRepos.toString()).append(" repositori")
                 }
             }
         }
@@ -79,18 +79,14 @@ class ProfileActivity : AppCompatActivity() {
                 Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
             }
         }
-
-
     }
 
     companion object{
         const val EXTRA_USER = "extra_person"
-        private val TAG = MainActivity::class.java.simpleName
         @StringRes
         private val TAB_TITLES = intArrayOf(
             R.string.followers,
             R.string.following
         )
     }
-
 }

@@ -3,72 +3,52 @@ package com.example.githubuserapp.viewmodel
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.githubuserapp.model.User
-import com.loopj.android.http.AsyncHttpClient
-import com.loopj.android.http.AsyncHttpResponseHandler
-import cz.msebera.android.httpclient.Header
-import org.json.JSONObject
+import com.example.githubuserapp.ApiConfig
+import com.example.githubuserapp.responses.DetailUserResponse
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ProfileViewModel : ViewModel(){
-    val userData = MutableLiveData<User>()
+    var userData = MutableLiveData<DetailUserResponse>()
     val isLoading = MutableLiveData(true)
     val stringError = MutableLiveData<String>()
 
-    fun getDetailUser(user: User) {
-        isLoading.postValue(true)
-        val client = AsyncHttpClient()
-        client.addHeader("Authorization", "token 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")
-        client.addHeader("User-Agent", "request")
-        val url = "https://api.github.com/users/${user.username}"
-        client.get(url, object : AsyncHttpResponseHandler() {
-            override fun onSuccess(
-                statusCode: Int,
-                headers: Array<Header>,
-                responseBody: ByteArray
-            ) {
-                // Jika koneksi berhasil
-                isLoading.postValue(false)
-                val result = String(responseBody)
-                Log.d(TAG, result)
-                try {
-                    val responseObject = JSONObject(result)
-                    val id = responseObject.getString("id")
-                    val name = responseObject.getString("name")
-                    val login = responseObject.getString("login")
-                    val company = responseObject.getString("company")
-                    val location = responseObject.getString("location")
-                    val avatar = responseObject.getString("avatar_url")
-                    val followers = responseObject.getInt("followers")
-                    val repos = responseObject.getInt("public_repos")
-                    val following = responseObject.getInt("following")
-                    val userModel = User(id, login, avatar, company, location, followers, following, repos, name)
-                    userData.postValue(userModel)
-                } catch (e: Exception) {
-                    stringError.postValue(e.message)
-                    e.printStackTrace()
-                }
-            }
-
-            override fun onFailure(
-                statusCode: Int,
-                headers: Array<Header>,
-                responseBody: ByteArray,
-                error: Throwable
-            ) {
-                // Jika koneksi gagal
-                isLoading.postValue(false)
-                val errorMessage = when (statusCode) {
-                    401 -> "$statusCode : Bad Request"
-                    403 -> "$statusCode : Forbidden"
-                    404 -> "$statusCode : Not Found"
-                    else -> "$statusCode : ${error.message}"
-                }
-                stringError.postValue(errorMessage)
-            }
-        })
+    private fun setDetailUser(user: DetailUserResponse) {
+        userData.postValue(user)
     }
 
-    companion object{
-        private val TAG = ProfileViewModel::class.java.simpleName
+    fun getDetail(query: String) {
+        isLoading.postValue(true)
+        val client = ApiConfig.getApiService().getDetailUser(query)
+        client.enqueue(object : Callback<DetailUserResponse> {
+            override fun onResponse(
+                call: Call<DetailUserResponse>,
+                response: Response<DetailUserResponse>
+            ) {
+                isLoading.postValue(false)
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    if (responseBody != null) {
+                        setDetailUser(responseBody)
+                    }
+                } else {
+                    val errorMessage = when (val statusCode = response.code()) {
+                        401 -> "$statusCode : Bad Request"
+                        403 -> "$statusCode : Forbidden"
+                        404 -> "$statusCode : Not Found"
+                        else -> "$statusCode"
+                    }
+                    Log.e(MainViewModel.TAG, errorMessage)
+                }
+            }
+
+            override fun onFailure(call: Call<DetailUserResponse>, t: Throwable) {
+                isLoading.postValue(false)
+                stringError.postValue(t.message)
+                Log.e(MainViewModel.TAG, t.message.toString())
+                t.printStackTrace()
+            }
+        })
     }
 }
