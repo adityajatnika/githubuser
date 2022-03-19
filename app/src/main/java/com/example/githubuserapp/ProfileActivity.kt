@@ -29,24 +29,8 @@ class ProfileActivity : AppCompatActivity() {
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        val user = intent.getParcelableExtra<User>(EXTRA_USER) as User
-        setUpView()
 
-//        binding.apply {
-//            tvNama.text = user.username
-//            tvCompany.text = StringBuilder(getString(R.string.company)).append(": ").append(user.company)
-//            tvLocation.text = StringBuilder("Lokasi: ").append(user.location)
-//            tvFollowers.text = StringBuilder(user.followers).append(" ").append(getString(R.string.followers).lowercase(
-//                Locale.getDefault()
-//            ))
-//            tvFollowing.text = StringBuilder(user.following).append(" diikuti")
-//            tvRepository.text = StringBuilder(user.repository).append(" repositori")
-//            tvUsername.text = StringBuilder("ID: ").append(user.username)
-//            Glide.with(baseContext)
-//                .load(user.avatar)
-//                .circleCrop()
-//                .into(imgUser)
-//        }
+        setUpView()
         val user = intent.getParcelableExtra<User>(EXTRA_USER) as User
         viewModel.getDetailUser(user)
 
