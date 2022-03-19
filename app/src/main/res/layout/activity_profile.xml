@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfileActivity">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_top"
+            android:padding="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/img_user"
+                    style="@style/imageProfil"
+                    android:layout_marginTop="24dp"
+                    android:contentDescription="@string/avatar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.498"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:srcCompat="@tools:sample/avatars" />
+
+                <TextView
+                    android:id="@+id/tv_nama"
+                    style="@style/textContent.profileName"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintEnd_toEndOf="@+id/img_user"
+                    app:layout_constraintStart_toStartOf="@+id/img_user"
+                    app:layout_constraintTop_toBottomOf="@+id/img_user"
+                    tools:text="Nama User" />
+
+                <TextView
+                    android:id="@+id/tv_username"
+                    style="@style/textContent.username"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_nama"
+                    app:layout_constraintStart_toStartOf="@+id/tv_nama"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_nama"
+                    tools:text="username" />
+
+                <TextView
+                    android:id="@+id/tv_followers"
+                    style="@style/textContent"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_following"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tv_following"
+                    tools:text="pengikut" />
+
+                <TextView
+                    android:id="@+id/tv_following"
+                    style="@style/textContent"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_username"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="@+id/tv_username"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_username"
+                    tools:text="diikuti" />
+
+                <TextView
+                    android:id="@+id/tv_repository"
+                    style="@style/textContent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/tv_following"
+                    app:layout_constraintTop_toTopOf="@+id/tv_following"
+                    tools:text="repositori" />
+
+                <TextView
+                    android:id="@+id/tv_company"
+                    style="@style/textContent.origin"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_following"
+                    app:layout_constraintHorizontal_bias="0.504"
+                    app:layout_constraintStart_toStartOf="@+id/tv_following"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_following"
+                    tools:text="Perusahaan" />
+
+                <TextView
+                    android:id="@+id/tv_location"
+                    style="@style/textContent.origin"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_company"
+                    app:layout_constraintStart_toStartOf="@+id/tv_company"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_company"
+                    tools:text="Lokasi" />
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout_top"
+            app:tabTextColor="@android:color/white" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tabs"
+            app:layout_constraintTop_toBottomOf="@id/tabs" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
