@@ -10,7 +10,8 @@ data class User(
     var avatar: String,
     var company: String = "",
     var location: String = "",
-    var followers: String = "",
-    var following: String = "",
-    var repository: String = ""
+    var followers: Int = 0,
+    var following: Int = 0,
+    var repository: Int = 0,
+    var name: String = ""
 ) : Parcelable

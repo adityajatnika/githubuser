@@ -1,27 +1,19 @@
 package com.example.githubuserapp
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
-import com.example.githubuserapp.adapter.ListUserAdapter
 import com.example.githubuserapp.adapter.SectionPagerAdapter
 import com.example.githubuserapp.databinding.ActivityProfileBinding
 import com.example.githubuserapp.model.ProfileViewModel
 import com.example.githubuserapp.model.User
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.loopj.android.http.AsyncHttpClient
-import com.loopj.android.http.AsyncHttpResponseHandler
-import cz.msebera.android.httpclient.Header
-import org.json.JSONArray
-import org.json.JSONObject
-import java.lang.StringBuilder
 import java.util.*
 
 class ProfileActivity : AppCompatActivity() {
@@ -38,7 +30,7 @@ class ProfileActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 //        val user = intent.getParcelableExtra<User>(EXTRA_USER) as User
-        getDetailUser()
+        setUpView()
 
 //        binding.apply {
 //            tvNama.text = user.username
@@ -56,6 +48,8 @@ class ProfileActivity : AppCompatActivity() {
 //                .into(imgUser)
 //        }
         val user = intent.getParcelableExtra<User>(EXTRA_USER) as User
+        viewModel.getDetailUser(user)
+
         val sectionsPagerAdapter = SectionPagerAdapter(this, user)
         val viewPager: ViewPager2 = findViewById(R.id.view_pager)
         viewPager.adapter = sectionsPagerAdapter
@@ -67,76 +61,42 @@ class ProfileActivity : AppCompatActivity() {
 
     }
 
-    private fun getDetailUser() {
-        binding.progressBar.visibility = View.VISIBLE
-        val client = AsyncHttpClient()
-        client.addHeader("Authorization", "token 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")
-        client.addHeader("User-Agent", "request")
-        val user = intent.getParcelableExtra<User>(EXTRA_USER) as User
-        val url = "https://api.github.com/users/${user.username}"
-        client.get(url, object : AsyncHttpResponseHandler() {
-            override fun onSuccess(
-                statusCode: Int,
-                headers: Array<Header>,
-                responseBody: ByteArray
-            ) {
-                // Jika koneksi berhasil
-                binding.progressBar.visibility = View.INVISIBLE
-                val result = String(responseBody)
-                Log.d(TAG, result)
-                try {
-                    val responseObject = JSONObject(result)
-                    val name = responseObject.getString("name")
-                    val login = responseObject.getString("login")
-                    val company = responseObject.getString("company")
-                    val location = responseObject.getString("location")
-                    val avatar = responseObject.getString("avatar_url")
-                    val followers = responseObject.getInt("followers")
-                    val repos = responseObject.getInt("public_repos")
-                    val following = responseObject.getInt("following")
 
-                    binding.apply {
-                        tvNama.text = name
-                        tvUsername.text = StringBuilder("@").append(login)
-                        tvCompany.text = StringBuilder(getString(R.string.company)).append(": ").append(company)
-                        tvLocation.text = StringBuilder(getString(R.string.location)).append(": ").append(location)
-                        Glide.with(baseContext)
-                            .load(avatar)
-                            .circleCrop()
-                            .into(imgUser)
-                        tvFollowers.text = StringBuilder(followers.toString()).append(" ").append(getString(R.string.followers).lowercase(
-                            Locale.getDefault()
-                        ))
-                        tvFollowing.text = StringBuilder(following.toString()).append(" diikuti")
-                        tvRepository.text = StringBuilder(repos.toString()).append(" repositori")
-                    }
 
-//                    binding.tvQuote.text = quote
-//                    binding.tvAuthor.text = author
-                } catch (e: Exception) {
-                    Toast.makeText(this@ProfileActivity, e.message, Toast.LENGTH_SHORT).show()
-                    e.printStackTrace()
+    private fun setUpView() {
+
+        viewModel.isLoading.observe(this) { isLoading ->
+            binding.progressBar.visibility = if(isLoading) View.VISIBLE else View.INVISIBLE
+        }
+
+        viewModel.userData.observe(this) { user ->
+            if(user != null){
+                binding.apply {
+                    tvNama.text = user.name
+                    tvUsername.text = java.lang.StringBuilder("@").append(user.username)
+                    tvCompany.text = StringBuilder(getString(R.string.company)).append(": ").append(user.company)
+                    tvLocation.text = StringBuilder(getString(R.string.location)).append(": ").append(user.location)
+                    Glide.with(baseContext)
+                        .load(user.avatar)
+                        .circleCrop()
+                        .into(imgUser)
+                    tvFollowers.text = java.lang.StringBuilder(user.followers.toString()).append(" ").append(getString(
+                        R.string.followers).lowercase(
+                        Locale.getDefault()
+                    ))
+                    tvFollowing.text = java.lang.StringBuilder(user.following.toString()).append(" diikuti")
+                    tvRepository.text = java.lang.StringBuilder(user.repository.toString()).append(" repositori")
                 }
-
             }
+        }
 
-            override fun onFailure(
-                statusCode: Int,
-                headers: Array<Header>,
-                responseBody: ByteArray,
-                error: Throwable
-            ) {
-                // Jika koneksi gagal
-                binding.progressBar.visibility = View.INVISIBLE
-                val errorMessage = when (statusCode) {
-                    401 -> "$statusCode : Bad Request"
-                    403 -> "$statusCode : Forbidden"
-                    404 -> "$statusCode : Not Found"
-                    else -> "$statusCode : ${error.message}"
-                }
-                Toast.makeText(this@ProfileActivity, errorMessage, Toast.LENGTH_SHORT).show()
+        viewModel.stringError.observe(this) {
+            if (it != null){
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
             }
-        })
+        }
+
+
     }
 
     companion object{
