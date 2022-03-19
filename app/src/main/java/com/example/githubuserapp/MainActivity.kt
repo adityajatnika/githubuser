@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubuserapp.adapter.ListUserAdapter
 import com.example.githubuserapp.databinding.ActivityMainBinding
-import com.example.githubuserapp.viewmodel.MainViewModel
 import com.example.githubuserapp.model.User
+import com.example.githubuserapp.viewmodel.MainViewModel
 
 class MainActivity : AppCompatActivity() {
 //    private val list = ArrayList<User>()
@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.stringError.observe(this){
             if(it != null){
-                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, it, Toast.LENGTH_LONG).show()
             }
         }
     }

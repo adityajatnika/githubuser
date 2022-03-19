@@ -3,68 +3,60 @@ package com.example.githubuserapp.viewmodel
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.githubuserapp.ApiConfig
 import com.example.githubuserapp.model.User
-import com.loopj.android.http.AsyncHttpClient
-import com.loopj.android.http.AsyncHttpResponseHandler
-import cz.msebera.android.httpclient.Header
-import org.json.JSONArray
-import org.json.JSONObject
+import com.example.githubuserapp.responses.UserResponse
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-class MainViewModel : ViewModel(){
+class MainViewModel : ViewModel() {
     val users = MutableLiveData<List<User>>()
     val isLoading = MutableLiveData(true)
     val stringError = MutableLiveData<String>()
-    private val baseUrl = "https://api.github.com/"
 
-    fun getListUser(nextUrl : String) {
+    fun getListUser(nextUrl: String) {
         isLoading.postValue(true)
-        val client = AsyncHttpClient()
-        client.addHeader("Authorization", "token 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")
-        client.addHeader("User-Agent", "request")
-        val url = StringBuilder(baseUrl).append(nextUrl).toString()
-        client.get(url, object : AsyncHttpResponseHandler() {
-            override fun onSuccess(statusCode: Int, headers: Array<Header>, responseBody: ByteArray) {
-                // Jika koneksi berhasil
+
+        val client = ApiConfig.getApiService().getUsers()
+        client.enqueue(object : Callback<List<UserResponse>> {
+            override fun onResponse(
+                call: Call<List<UserResponse>>,
+                response: Response<List<UserResponse>>
+            ) {
                 isLoading.postValue(false)
-                val listUser = ArrayList<User>()
-                val result = String(responseBody)
-                Log.d(TAG, result)
-                try {
-                    val jsonArray = if (nextUrl == "users"){
-                        JSONArray(result)
-                    } else {
-                        val jsonObject = JSONObject(result)
-                        jsonObject.getJSONArray("items")
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    if (responseBody != null) {
+                        val listUser = ArrayList<User>()
+                        for (user in responseBody) {
+                            listUser.add(
+                                User(user.id.toString(), user.login, user.avatarUrl)
+                            )
+                        }
+                        users.postValue(listUser)
                     }
-                    for (i in 0 until jsonArray.length()) {
-                        val jsonObject = jsonArray.getJSONObject(i)
-                        val login = jsonObject.getString("login")
-                        val avatar = jsonObject.getString("avatar_url")
-                        val id = jsonObject.getString("id")
-                        val user = User(id, login, avatar)
-                        listUser.add(user)
+                } else {
+                    val errorMessage = when (val statusCode = response.code()) {
+                        401 -> "$statusCode : Bad Request"
+                        403 -> "$statusCode : Forbidden"
+                        404 -> "$statusCode : Not Found"
+                        else -> "$statusCode"
                     }
-                    users.postValue(listUser)
-                } catch (e: Exception) {
-                    stringError.postValue(e.message)
-                    e.printStackTrace()
+                    Log.e(TAG, errorMessage)
                 }
             }
-            override fun onFailure(statusCode: Int, headers: Array<Header>, responseBody: ByteArray, error: Throwable) {
-                // Jika koneksi gagal
+
+            override fun onFailure(call: Call<List<UserResponse>>, t: Throwable) {
                 isLoading.postValue(false)
-                val errorMessage = when (statusCode) {
-                    401 -> "$statusCode : Bad Request"
-                    403 -> "$statusCode : Forbidden"
-                    404 -> "$statusCode : Not Found"
-                    else -> "$statusCode : ${error.message}"
-                }
-                stringError.postValue(errorMessage)
+                stringError.postValue(t.message)
+                Log.e(TAG, t.message.toString())
+                t.printStackTrace()
             }
         })
     }
 
-    companion object{
-        private val TAG = ProfileViewModel::class.java.simpleName
+    companion object {
+        val TAG: String = MainViewModel::class.java.simpleName
     }
 }
