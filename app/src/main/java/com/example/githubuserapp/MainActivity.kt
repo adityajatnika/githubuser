@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
         setUpView()
 
-        viewModel.getListUser("users")
+        viewModel.getListUser()
     }
 
     private fun setUpView() {
@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity() {
         searchView.queryHint = resources.getString(R.string.search_hint)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                viewModel.getListUser("search/users?q=${query}")
+                viewModel.getListUser(query)
                 searchView.clearFocus()
                 return true
             }
