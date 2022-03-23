@@ -11,13 +11,17 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubuserapp.adapter.ListUserAdapter
 import com.example.githubuserapp.databinding.ActivityMainBinding
 import com.example.githubuserapp.model.User
 import com.example.githubuserapp.viewmodel.MainViewModel
+import com.example.githubuserapp.viewmodel.SettingViewModel
+import com.example.githubuserapp.viewmodel.ViewModelFactory
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,9 +39,23 @@ class MainActivity : AppCompatActivity() {
 
         binding.rvUser.setHasFixedSize(true)
 
+        val pref = SettingPreferences.getInstance(dataStore)
+        val settingViewModel = ViewModelProvider(this, ViewModelFactory(pref))[SettingViewModel::class.java]
+
+        settingViewModel.getThemeSettings().observe(this
+        ) { isDarkModeActive: Boolean ->
+            if (isDarkModeActive) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+        }
+
         setUpView()
 
         viewModel.getListUser()
+
+
     }
 
     private fun setUpView() {
@@ -111,8 +129,10 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(baseContext, "Fitur Belum Tersedia", Toast.LENGTH_SHORT).show()
                 true
             }
-            R.id.menu2 -> {
-                Toast.makeText(baseContext, "Fitur Belum Tersedia", Toast.LENGTH_SHORT).show()
+            R.id.menu_settings -> {
+//                Toast.makeText(baseContext, "Fitur Belum Tersedia", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this@MainActivity, SettingActivity::class.java)
+                startActivity(intent)
                 true
             }
             else -> true

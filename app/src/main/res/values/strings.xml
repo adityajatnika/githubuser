@@ -118,10 +118,11 @@
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="menu_2">Opsi 1</string>
+    <string name="settings">Settings</string>
     <string name="search">Cari</string>
     <string name="search_hint">Cari Username</string>
     <string name="logo_developer">Logo Developer</string>
+    <string name="dark_mode">Dark Mode</string>
 
 
 </resources>
