@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.githubuserapp.ApiConfig
+import com.example.githubuserapp.ResponseStatus
 import com.example.githubuserapp.model.User
 import com.example.githubuserapp.responses.UserResponse
 import retrofit2.Call
@@ -41,9 +42,9 @@ class FollowingViewModel : ViewModel() {
                     }
                 } else {
                     val errorMessage = when (val statusCode = response.code()) {
-                        401 -> "$statusCode : Bad Request"
-                        403 -> "$statusCode : Forbidden"
-                        404 -> "$statusCode : Not Found"
+                        ResponseStatus.BAD_REQUEST.stat -> "$statusCode : Bad Request"
+                        ResponseStatus.FORBIDDEN.stat -> "$statusCode : Forbidden"
+                        ResponseStatus.NOT_FOUND.stat -> "$statusCode : Not Found"
                         else -> "$statusCode"
                     }
                     Log.e(MainViewModel.TAG, errorMessage)
