@@ -1,11 +1,11 @@
-package com.example.githubuserapp.viewmodel
+package com.example.githubuserapp.ui.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.githubuserapp.ApiConfig
-import com.example.githubuserapp.ResponseStatus
-import com.example.githubuserapp.responses.DetailUserResponse
+import com.example.githubuserapp.data.remote.retrofit.ApiConfig
+import com.example.githubuserapp.utils.ResponseStatus
+import com.example.githubuserapp.data.remote.response.DetailUserResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

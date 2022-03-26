@@ -1,8 +1,8 @@
-package com.example.githubuserapp.viewmodel
+package com.example.githubuserapp.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.githubuserapp.SettingPreferences
+import com.example.githubuserapp.utils.SettingPreferences
 
 class ViewModelFactory(private val pref: SettingPreferences) : ViewModelProvider.NewInstanceFactory() {
 

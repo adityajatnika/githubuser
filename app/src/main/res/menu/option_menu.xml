@@ -8,9 +8,9 @@
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="collapseActionView|ifRoom" />
     <group android:menuCategory="container">
-        <item android:id="@+id/menu1"
-            android:title="@string/menu_1"
-            android:icon = "@drawable/ic_baseline_settings_24"
+        <item android:id="@+id/menu_favorite"
+            android:title="@string/favorite"
+            android:icon = "@drawable/ic_baseline_favorite_24"
             app:showAsAction="always" />
         <item android:id="@+id/menu_settings"
             android:title="@string/settings" />

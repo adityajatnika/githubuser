@@ -1,4 +1,4 @@
-package com.example.githubuserapp
+package com.example.githubuserapp.ui.activity
 
 import android.os.Bundle
 import android.view.View
@@ -8,10 +8,11 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
-import com.example.githubuserapp.adapter.SectionPagerAdapter
+import com.example.githubuserapp.R
+import com.example.githubuserapp.data.User
 import com.example.githubuserapp.databinding.ActivityProfileBinding
-import com.example.githubuserapp.model.User
-import com.example.githubuserapp.viewmodel.ProfileViewModel
+import com.example.githubuserapp.ui.adapter.SectionPagerAdapter
+import com.example.githubuserapp.ui.viewmodel.ProfileViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import java.util.*
@@ -65,7 +66,8 @@ class ProfileActivity : AppCompatActivity() {
                         .circleCrop()
                         .into(imgUser)
                     tvFollowers.text = java.lang.StringBuilder(user.followers.toString()).append(" ").append(getString(
-                        R.string.followers).lowercase(
+                        R.string.followers
+                    ).lowercase(
                         Locale.getDefault()
                     ))
                     tvFollowing.text = java.lang.StringBuilder(user.following.toString()).append(" diikuti")

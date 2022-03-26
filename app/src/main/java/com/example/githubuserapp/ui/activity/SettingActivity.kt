@@ -1,4 +1,4 @@
-package com.example.githubuserapp
+package com.example.githubuserapp.ui.activity
 
 import android.content.Context
 import android.os.Bundle
@@ -9,8 +9,10 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
-import com.example.githubuserapp.viewmodel.SettingViewModel
-import com.example.githubuserapp.viewmodel.ViewModelFactory
+import com.example.githubuserapp.R
+import com.example.githubuserapp.ui.viewmodel.SettingViewModel
+import com.example.githubuserapp.ui.viewmodel.ViewModelFactory
+import com.example.githubuserapp.utils.SettingPreferences
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")

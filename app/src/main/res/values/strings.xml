@@ -11,7 +11,7 @@
     <string name="avatar">avatar</string>
     <string name="detail_user">Detail User</string>
     <string name="list_user">List User</string>
-    <string name="menu_1">Menu 1</string>
+    <string name="favorite">List Favorite</string>
 
     <string-array name="username">
         <item>JakeWharton</item>
@@ -123,6 +123,7 @@
     <string name="search_hint">Cari Username</string>
     <string name="logo_developer">Logo Developer</string>
     <string name="dark_mode">Dark Mode</string>
+    <string name="favorite_button">Favorite Button</string>
 
 
 </resources>

@@ -1,4 +1,4 @@
-package com.example.githubuserapp
+package com.example.githubuserapp.ui.activity
 
 import android.app.SearchManager
 import android.content.Context
@@ -16,12 +16,14 @@ import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.githubuserapp.adapter.ListUserAdapter
+import com.example.githubuserapp.R
+import com.example.githubuserapp.data.User
 import com.example.githubuserapp.databinding.ActivityMainBinding
-import com.example.githubuserapp.model.User
-import com.example.githubuserapp.viewmodel.MainViewModel
-import com.example.githubuserapp.viewmodel.SettingViewModel
-import com.example.githubuserapp.viewmodel.ViewModelFactory
+import com.example.githubuserapp.ui.adapter.ListUserAdapter
+import com.example.githubuserapp.ui.viewmodel.MainViewModel
+import com.example.githubuserapp.ui.viewmodel.SettingViewModel
+import com.example.githubuserapp.ui.viewmodel.ViewModelFactory
+import com.example.githubuserapp.utils.SettingPreferences
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,13 +33,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        supportActionBar?.title = getString(R.string.list_user)
-
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        binding.rvUser.setHasFixedSize(true)
 
         val pref = SettingPreferences.getInstance(dataStore)
         val settingViewModel = ViewModelProvider(this, ViewModelFactory(pref))[SettingViewModel::class.java]
@@ -51,10 +46,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        supportActionBar?.title = getString(R.string.list_user)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.rvUser.setHasFixedSize(true)
+
         setUpView()
 
         viewModel.getListUser()
-
 
     }
 
@@ -125,7 +126,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.menu1 -> {
+            R.id.menu_favorite -> {
                 Toast.makeText(baseContext, "Fitur Belum Tersedia", Toast.LENGTH_SHORT).show()
                 true
             }

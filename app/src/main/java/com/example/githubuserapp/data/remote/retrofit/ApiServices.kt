@@ -1,8 +1,8 @@
-package com.example.githubuserapp
+package com.example.githubuserapp.data.remote.retrofit
 
-import com.example.githubuserapp.responses.DetailUserResponse
-import com.example.githubuserapp.responses.FindUserResponse
-import com.example.githubuserapp.responses.UserResponse
+import com.example.githubuserapp.data.remote.response.DetailUserResponse
+import com.example.githubuserapp.data.remote.response.FindUserResponse
+import com.example.githubuserapp.data.remote.response.UserResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Headers
