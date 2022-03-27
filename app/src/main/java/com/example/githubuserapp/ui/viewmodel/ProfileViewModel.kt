@@ -72,6 +72,5 @@ class ProfileViewModel(application: Application)  : AndroidViewModel(application
     fun delete(user: UserEntity) {
         mUserRepository.delete(user)
     }
-
     suspend fun isFavorite(id: String) = userDao?.isUserFavorite(id)
 }

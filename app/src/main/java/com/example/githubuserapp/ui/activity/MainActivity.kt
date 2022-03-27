@@ -127,13 +127,11 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_favorite -> {
-//                Toast.makeText(baseContext, "Fitur Belum Tersedia", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this@MainActivity, FavoriteActivity::class.java)
                 startActivity(intent)
                 true
             }
             R.id.menu_settings -> {
-//                Toast.makeText(baseContext, "Fitur Belum Tersedia", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this@MainActivity, SettingActivity::class.java)
                 startActivity(intent)
                 true

@@ -25,10 +25,6 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProfileBinding
     private lateinit var viewModel: ProfileViewModel
     var isChecked = false
-//    private lateinit var userRoom: UserEntity = UserEntity()
-
-//    private var _activityNoteAddUpdateBinding: ActivityNoteAddUpdateBinding? = null
-//    private val binding get() = _activityNoteAddUpdateBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,8 +36,6 @@ class ProfileActivity : AppCompatActivity() {
 
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-//        noteAddUpdateViewModel = obtainViewModel(this@NoteAddUpdateActivity)
 
         setUpView()
         val user = intent.getParcelableExtra<User>(EXTRA_USER) as User
@@ -62,21 +56,14 @@ class ProfileActivity : AppCompatActivity() {
 
         binding.apply {
             btnFav.setOnClickListener {
-//                userRoom.let {
-//                    userRoom.id = user.id
-//                    userRoom.username = user.username
-//                    userRoom.urlToImage = user.avatar
-//                }
                 if(!isChecked){
                     viewModel.insert(UserEntity(user.id, user.username, user.avatar))
-                    showToast("Telah Ditambahkan")
+                    showToast(getString(R.string.favorite_added))
                     binding.btnFav.setImageDrawable(ContextCompat.getDrawable(binding.btnFav.context, R.drawable.ic_baseline_favorite_24))
-//                    isChecked=false
                 } else {
                     viewModel.delete(UserEntity(user.id, user.username, user.avatar))
-                    showToast("Telah Dihapus")
+                    showToast(getString(R.string.favorite_removed))
                     binding.btnFav.setImageDrawable(ContextCompat.getDrawable(binding.btnFav.context, R.drawable.ic_baseline_favorite_border_24))
-//                    isChecked=true
                 }
                 isChecked = !isChecked
             }
@@ -88,12 +75,12 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private suspend fun updateFavButton(id: String) {
-        if(viewModel.isFavorite(id)==true){
+        isChecked = if(viewModel.isFavorite(id)==true){
             binding.btnFav.setImageDrawable(ContextCompat.getDrawable(binding.btnFav.context, R.drawable.ic_baseline_favorite_24))
-            isChecked=true
+            true
         } else {
             binding.btnFav.setImageDrawable(ContextCompat.getDrawable(binding.btnFav.context, R.drawable.ic_baseline_favorite_border_24))
-            isChecked=false
+            false
         }
     }
 
@@ -132,14 +119,6 @@ class ProfileActivity : AppCompatActivity() {
             }
         }
     }
-//    override fun onDestroy() {
-//        super.onDestroy()
-//        _activityNoteAddUpdateBinding = null
-//    }
-//    private fun obtainViewModel(activity: AppCompatActivity): NoteAddUpdateViewModel {
-//        val factory = ViewModelFactory.getInstance(activity.application)
-//        return ViewModelProvider(activity, factory).get(NoteAddUpdateViewModel::class.java)
-//    }
 
     companion object{
         const val EXTRA_USER = "extra_person"

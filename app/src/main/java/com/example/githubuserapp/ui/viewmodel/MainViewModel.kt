@@ -3,11 +3,11 @@ package com.example.githubuserapp.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.githubuserapp.data.remote.retrofit.ApiConfig
-import com.example.githubuserapp.utils.ResponseStatus
 import com.example.githubuserapp.data.User
 import com.example.githubuserapp.data.remote.response.FindUserResponse
 import com.example.githubuserapp.data.remote.response.UserResponse
+import com.example.githubuserapp.data.remote.retrofit.ApiConfig
+import com.example.githubuserapp.utils.ResponseStatus
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -76,9 +76,9 @@ class MainViewModel : ViewModel() {
                         }
                     } else {
                         val errorMessage = when (val statusCode = response.code()) {
-                            401 -> "$statusCode : Bad Request"
-                            403 -> "$statusCode : Forbidden"
-                            404 -> "$statusCode : Not Found"
+                            ResponseStatus.BAD_REQUEST.stat -> "$statusCode : Bad Request"
+                            ResponseStatus.FORBIDDEN.stat -> "$statusCode : Forbidden"
+                            ResponseStatus.NOT_FOUND.stat -> "$statusCode : Not Found"
                             else -> "$statusCode"
                         }
                         Log.e(TAG, errorMessage)

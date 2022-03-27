@@ -25,7 +25,4 @@ class UserRepository(application: Application) {
     fun update(user: UserEntity) {
         executorService.execute { mUserDao.updateUser(user) }
     }
-//    fun isUserFavorite(user: String) {
-//        executorService.execute { mUserDao.isUserFavorite(user) }
-//    }
 }

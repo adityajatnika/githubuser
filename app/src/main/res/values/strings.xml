@@ -125,6 +125,8 @@
     <string name="dark_mode">Dark Mode</string>
     <string name="favorite_button">Favorite Button</string>
     <string name="favorite_user">Favorite User</string>
+    <string name="favorite_added">User ditambahkan ke favorit</string>
+    <string name="favorite_removed">User dihapus dari favorit</string>
 
 
 </resources>

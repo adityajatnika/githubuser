@@ -41,15 +41,5 @@ class SettingActivity : AppCompatActivity() {
         switchTheme.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
             settingViewModel.saveThemeSetting(isChecked)
         }
-//
-//        switchTheme.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
-//            if (isChecked) {
-//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-//                switchTheme.isChecked = true
-//            } else {
-//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-//                switchTheme.isChecked = false
-//            }
-//        }
     }
 }
