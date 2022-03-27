@@ -1,16 +1,26 @@
 package com.example.githubuserapp.ui.viewmodel
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.example.githubuserapp.data.UserRepository
+import com.example.githubuserapp.data.local.entity.UserEntity
+import com.example.githubuserapp.data.local.room.UserDao
+import com.example.githubuserapp.data.local.room.UserDatabase
+import com.example.githubuserapp.data.remote.response.DetailUserResponse
 import com.example.githubuserapp.data.remote.retrofit.ApiConfig
 import com.example.githubuserapp.utils.ResponseStatus
-import com.example.githubuserapp.data.remote.response.DetailUserResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ProfileViewModel : ViewModel(){
+class ProfileViewModel(application: Application)  : AndroidViewModel(application){
+    private val mUserRepository: UserRepository = UserRepository(application)
+
+    private var userDatabase: UserDatabase? = UserDatabase.getDatabase(application)
+    private var userDao: UserDao? = userDatabase?.userDao()
+
     var userData = MutableLiveData<DetailUserResponse>()
     val isLoading = MutableLiveData(true)
     val stringError = MutableLiveData<String>()
@@ -52,4 +62,16 @@ class ProfileViewModel : ViewModel(){
             }
         })
     }
+
+    fun insert(user: UserEntity) {
+        mUserRepository.insert(UserEntity(user.id, user.username, user.urlToImage))
+    }
+    fun update(user: UserEntity) {
+        mUserRepository.update(user)
+    }
+    fun delete(user: UserEntity) {
+        mUserRepository.delete(user)
+    }
+
+    suspend fun isFavorite(id: String) = userDao?.isUserFavorite(id)
 }

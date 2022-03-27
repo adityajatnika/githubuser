@@ -124,6 +124,7 @@
     <string name="logo_developer">Logo Developer</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="favorite_button">Favorite Button</string>
+    <string name="favorite_user">Favorite User</string>
 
 
 </resources>

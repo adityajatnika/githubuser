@@ -11,7 +11,7 @@ class UserViewModelFactory private constructor(private val mApplication: Applica
         @JvmStatic
         fun getInstance(application: Application): UserViewModelFactory {
             if (INSTANCE == null) {
-                synchronized(ViewModelFactory::class.java) {
+                synchronized(UserViewModelFactory::class.java) {
                     INSTANCE = UserViewModelFactory(application)
                 }
             }
@@ -23,8 +23,8 @@ class UserViewModelFactory private constructor(private val mApplication: Applica
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(FavoriteViewModel::class.java)) {
             return FavoriteViewModel(mApplication) as T
-        } else if (modelClass.isAssignableFrom(UserAddUpdateViewModel::class.java)) {
-            return UserAddUpdateViewModel(mApplication) as T
+        } else if (modelClass.isAssignableFrom(ProfileViewModel::class.java)) {
+            return ProfileViewModel(mApplication) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
