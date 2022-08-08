@@ -4,6 +4,8 @@ plugins {
     id 'kotlin-parcelize'
     id 'kotlin-kapt'
 }
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 
 android {
     compileSdk 32
@@ -19,9 +21,15 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField "String", "API_URL", "\""+localProperties["API_URL"]+"\""
+            buildConfigField "String", "API_TOKEN", "\""+localProperties["API_TOKEN"]+"\""
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "API_URL", "\""+localProperties["API_URL"]+"\""
+            buildConfigField "String", "API_TOKEN", "\""+localProperties["API_TOKEN"]+"\""
         }
     }
     compileOptions {
