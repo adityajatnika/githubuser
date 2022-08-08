@@ -11,22 +11,22 @@ import retrofit2.http.Query
 
 interface ApiServices {
     @GET("users")
-    @Headers("Authorization: token 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")
+    @Headers("Authorization: token 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")
     fun getUsers(): Call<List<UserResponse>>
 
     @GET("search/users")
-    @Headers("Authorization: token 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")
+    @Headers("Authorization: token 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")
     fun findUsers(@Query("q") query: String): Call<FindUserResponse>
 
     @GET("users/{login}/followers")
-    @Headers("Authorization: token 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")
+    @Headers("Authorization: token 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")
     fun getFollowers(@Path("login") login : String): Call<List<UserResponse>>
 
     @GET("users/{login}/following")
-    @Headers("Authorization: token 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")
+    @Headers("Authorization: token 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")
     fun getFollowing(@Path("login") login : String): Call<List<UserResponse>>
 
     @GET("users/{login}")
-    @Headers("Authorization: token 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")
+    @Headers("Authorization: token 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")
     fun getDetailUser(@Path("login") login : String): Call<DetailUserResponse>
 }
