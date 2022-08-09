@@ -12,16 +12,16 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubuserapp.data.User
-import com.example.githubuserapp.databinding.FragmentFollowersBinding
+import com.example.githubuserapp.databinding.FragmentFollowBinding
 import com.example.githubuserapp.ui.activity.ProfileActivity
 import com.example.githubuserapp.ui.adapter.ListUserAdapter
-import com.example.githubuserapp.ui.viewmodel.FollowersViewModel
+import com.example.githubuserapp.ui.viewmodel.FollowViewModel
 
-class FollowersFragment(private val user: User) : Fragment() {
+class FollowFragment(private val user: User, private val tab: Int) : Fragment() {
 
+    private lateinit var followBinding: FragmentFollowBinding
+    private val viewModel: FollowViewModel by viewModels()
 
-    private lateinit var binding: FragmentFollowersBinding
-    private val viewModel: FollowersViewModel by viewModels()
     private val listUser = ArrayList<User>()
     private val adapter = ListUserAdapter(listUser)
 
@@ -32,11 +32,10 @@ class FollowersFragment(private val user: User) : Fragment() {
 
     }
 
-    private fun setUpView(){
+    private fun setUpView() {
         showRecyclerList()
-
         viewModel.isLoading.observe(viewLifecycleOwner) {
-            binding.progressBar.visibility = if (it) {
+            followBinding.progressBar.visibility = if (it) {
                 View.VISIBLE
             } else {
                 View.INVISIBLE
@@ -46,7 +45,7 @@ class FollowersFragment(private val user: User) : Fragment() {
         viewModel.users.observe(viewLifecycleOwner) {
             if(it != null){
                 val adapter = ListUserAdapter(it)
-                binding.rvUser.adapter = adapter
+                followBinding.rvUser.adapter = adapter
 
                 adapter.setOnItemClickCallback(object : ListUserAdapter.OnItemClickCallback {
                     override fun onItemClicked(data: User) {
@@ -67,8 +66,9 @@ class FollowersFragment(private val user: User) : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentFollowersBinding.inflate(layoutInflater, container, false)
-        return binding.root
+        followBinding = FragmentFollowBinding.inflate(layoutInflater, container, false)
+        return followBinding.root
+
     }
 
     private fun showSelectedUser(user: User) {
@@ -80,18 +80,18 @@ class FollowersFragment(private val user: User) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.rvUser.setHasFixedSize(true)
-        binding.rvUser.adapter = this@FollowersFragment.adapter
-        binding.rvUser.layoutManager = LinearLayoutManager(requireContext())
+        followBinding.rvUser.setHasFixedSize(true)
+        followBinding.rvUser.adapter = this@FollowFragment.adapter
+        followBinding.rvUser.layoutManager = LinearLayoutManager(requireContext())
         setUpView()
-        viewModel.getListUser(user.username)
+        viewModel.getListUser(user.username, tab)
     }
 
     private fun showRecyclerList() {
         if (requireActivity().resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            binding.rvUser.layoutManager = GridLayoutManager(requireContext(), 2)
+            followBinding.rvUser.layoutManager = GridLayoutManager(requireContext(), 2)
         } else {
-            binding.rvUser.layoutManager = LinearLayoutManager(requireContext())
+            followBinding.rvUser.layoutManager = LinearLayoutManager(requireContext())
         }
     }
 }

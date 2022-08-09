@@ -11,7 +11,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class FollowersViewModel : ViewModel() {
+class FollowViewModel : ViewModel() {
 
     val users = MutableLiveData<List<User>>()
     val isLoading = MutableLiveData(true)
@@ -27,9 +27,13 @@ class FollowersViewModel : ViewModel() {
         users.postValue(listUser)
     }
 
-    fun getListUser(query: String) {
+    fun getListUser(query: String, tab: Int) {
         isLoading.postValue(true)
-        val client = ApiConfig.getApiService().getFollowers(query)
+        val client = if (tab == 1){
+            ApiConfig.getApiService().getFollowing(query)
+        } else {
+            ApiConfig.getApiService().getFollowers(query)
+        }
         client.enqueue(object : Callback<List<UserResponse>> {
             override fun onResponse(
                 call: Call<List<UserResponse>>,
