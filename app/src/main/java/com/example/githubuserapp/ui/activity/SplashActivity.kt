@@ -15,7 +15,6 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         supportActionBar?.hide()
-        val waitingTime: Long = 2000
         Handler(Looper.getMainLooper()).postDelayed({
             val intent = Intent(this@SplashActivity, MainActivity::class.java )
             finish()
@@ -23,6 +22,10 @@ class SplashActivity : AppCompatActivity() {
 
         }, waitingTime)
 
+    }
+
+    companion object{
+        const val waitingTime : Long = 2000
     }
 }
 
